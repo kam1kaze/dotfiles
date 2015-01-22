@@ -19,6 +19,8 @@ Plugin 'scrooloose/syntastic'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'vim-ruby/vim-ruby'
+Plugin 'gregf/ultisnips-chef'
+
 "Plugin 'Valloric/YouCompleteMe'
 "Plugin 'airblade/vim-gitgutter'
 "Plugin 'The-NERD-Commenter'
@@ -42,6 +44,20 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
+""" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" Disable auto-indentation for .erb files
+autocmd FileType eruby setl indentexpr=
+
+"""
 highlight ExtraWhitespace ctermbg=darkgreen guibg=lightgreen
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -49,16 +65,16 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-" Disable auto-indentation for .erb files
-autocmd FileType eruby setl indentexpr=
-
-" Set ultisnips triggers
+""" Set ultisnips triggers
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 let g:UltiSnipsListSnippets="<c-e>"
 
+autocmd BufRead,BufNewFile */recipes/*.rb set filetype=ruby.eruby.chef
+
+""" General settings
 syntax enable
 colorscheme zenburn
 "set t_Co=256
