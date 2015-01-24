@@ -16,10 +16,11 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'rodjek/vim-puppet'
 Plugin 'godlygeek/tabular'
 Plugin 'scrooloose/syntastic'
-Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'vim-ruby/vim-ruby'
+Plugin 'SirVer/ultisnips'
 Plugin 'gregf/ultisnips-chef'
+Plugin 'Valloric/YouCompleteMe'
 
 "Plugin 'Valloric/YouCompleteMe'
 "Plugin 'airblade/vim-gitgutter'
@@ -28,6 +29,7 @@ Plugin 'gregf/ultisnips-chef'
 Plugin 'tomasr/molokai'
 Plugin 'jnurmine/Zenburn'
 Plugin 'oblitum/rainbow'
+Plugin 'altercation/vim-colors-solarized'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -75,10 +77,22 @@ let g:UltiSnipsListSnippets="<c-e>"
 autocmd BufRead,BufNewFile */recipes/*.rb set filetype=ruby.eruby.chef
 
 """ General settings
-syntax enable
-colorscheme zenburn
-"set t_Co=256
 set wildmenu
+
+" Colors
+set t_Co=256
+syntax enable
+set background=dark
+colorscheme solarized
+"let g:solarized_termcolors=256
+
+" Set tab size
+set expandtab
+set tabstop=2 shiftwidth=2 softtabstop=2
+set autoindent
+
+" Extend dir tree :Explorer
+let g:netrw_liststyle=3
 
 " Show tab numbers
 if exists("+showtabline")
