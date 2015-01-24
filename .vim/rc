@@ -20,7 +20,9 @@ Plugin 'honza/vim-snippets'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'SirVer/ultisnips'
 Plugin 'gregf/ultisnips-chef'
-Plugin 'Valloric/YouCompleteMe'
+if v:version > 703 || (v:version == 703 && has('patch584'))
+  Plugin 'Valloric/YouCompleteMe'
+endif
 
 "Plugin 'Valloric/YouCompleteMe'
 "Plugin 'airblade/vim-gitgutter'
