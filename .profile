@@ -11,6 +11,9 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
+# Aliases
+alias tmux="TERM=screen-256color tmux -2"
+
 # revert back PS1
 settitle() {
     printf "\033k$1\033\\"
