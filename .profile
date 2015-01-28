@@ -29,3 +29,8 @@ if [ ! -z "$SSH_AUTH_SOCK" -a "$SSH_AUTH_SOCK" != "$HOME/.ssh/agent_sock" ] ; th
     ln -s "$SSH_AUTH_SOCK" "$HOME/.ssh/agent_sock"
     export SSH_AUTH_SOCK="$HOME/.ssh/agent_sock"
 fi
+
+# Use SSH agent
+if command -v keychain &>/dev/null && [[ -r ~/.ssh/identity ]]; then
+  eval `keychain --eval identity`
+fi
