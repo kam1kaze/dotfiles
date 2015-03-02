@@ -23,6 +23,7 @@ Plugin 'gregf/ultisnips-chef'
 if v:version > 703 || (v:version == 703 && has('patch584'))
   Plugin 'Valloric/YouCompleteMe'
 endif
+Plugin 'elzr/vim-json'
 
 "Plugin 'Valloric/YouCompleteMe'
 "Plugin 'airblade/vim-gitgutter'
@@ -92,6 +93,10 @@ colorscheme solarized
 set expandtab
 set tabstop=2 shiftwidth=2 softtabstop=2
 set autoindent
+
+" Add full file path to your existing statusline
+set statusline+=%f
+set laststatus=2
 
 " Extend dir tree :Explorer
 let g:netrw_liststyle=3
