@@ -3,11 +3,56 @@
 source /etc/bash_completion
 
 host=$1
+sudo_password=
+
+function _sudo_ssh() {
+
+  local host=$1
+  local pass=$2
+
+  /usr/bin/expect <(echo '
+
+#trap sigwinch and pass it to the child we spawned
+trap {
+ set rows [stty rows]
+ set cols [stty columns]
+ stty rows $rows columns $cols < $spawn_out(slave,name)
+} WINCH
+
+proc do_exit {msg} {
+    puts stderr $msg
+    exit 1
+}
+
+spawn ssh -tt '$host' sudo -i
+expect  {
+  "password for " {
+    send -- "'$pass'\r"
+    interact
+  } "password:" {
+    do_exit "invalid SSH password or account"
+  } "try again" {
+    do_exit "invalid sudo password"
+  } timeout {
+    do_exit "timed out waiting for prompt"
+  } eof {
+    do_exit "connection to host failed: $expect_out(buffer)"
+  }
+}
+')
+
+}
 
 function _ssh() {
   local connect=true
   while [[ "$connect" == true ]]; do
-    ssh $1
+
+    if [[ -n $sudo_password ]]; then
+      _sudo_ssh $host $sudo_password
+    else
+      ssh $1
+    fi
+
     if [[ "$?" -ne 0 ]]; then
       local dumm
       echo
