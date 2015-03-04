@@ -32,5 +32,5 @@ fi
 
 # Use SSH agent
 if command -v keychain &>/dev/null && [[ -r ~/.ssh/identity ]]; then
-  eval `keychain --eval identity`
+  eval `keychain --quiet --eval identity`
 fi
