@@ -19,7 +19,7 @@ settitle() {
     printf "\033k$1\033\\"
 }
 ssh() {
-    command ssh -o 'PermitLocalCommand yes' -o 'LocalCommand host="%n"; echo -ne "\033k${host//\.*/}\033\\"' "$@"
+    command ssh -o 'PermitLocalCommand yes' -o 'LocalCommand host="%n"; shopt -s extglob; host=${host#@(server|host).}; echo -ne "\033k${host//.*}\033\\"' "$@"
     settitle "bash"
 }
 
