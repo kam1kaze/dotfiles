@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source /etc/bash_completion
-source /home/kam1kaze/.profile
+source $HOME/.profile
 
 host=$1
 sudo_password=
