@@ -10,26 +10,47 @@ pkgs_centos=(
   vcsh
 )
 
+pkgs_ubuntu=(
+  bash-completion
+  git
+  tmux
+  pv
+  netcat
+  vcsh
+)
+
 # YouCompleteMe requires
 pkgs_centos+=( cmake gcc-c++ python-libs python-devel )
+pkgs_ubuntu+=( build-essential cmake python-dev)
 
 declare -a pkgs_install
 if fgrep -iq centos /etc/issue; then
+
   # check packages
   for pkg in ${pkgs_centos[*]}; do
     rpm -q --whatprovides --quiet $pkg || pkgs_install+=( $pkg )
   done
-fi
 
+  if [[ ${#pkgs_install[*]} -gt 0 ]]; then
+    echo "Please do as root:"
+    echo "  sudo yum install -y ${pkgs_install[@]}"
+    echo "For 'vcsh' use this command:"
+    echo "  sudo yum install -y http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/v/vcsh-1.20141026-1.fc22.noarch.rpm"
+    echo "Then execute this script again"
+    exit
+  fi
+elif fgrep -iq ubuntu /etc/issue; then
 
+  for pkg in ${pkgs_ubuntu[*]}; do
+    dpkg -s $pkg &>/dev/null || pkgs_install+=( $pkg )
+  done
 
-if [[ ${#pkgs_install[*]} -gt 0 ]]; then
-  echo "Please do as root:"
-  echo "  yum install -y ${pkgs_install[@]}"
-  echo "For 'vcsh' use this command:"
-  echo "  yum install -y http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/v/vcsh-1.20141026-1.fc22.noarch.rpm"
-  echo "Then execute this script again"
-  exit
+  if [[ ${#pkgs_install[*]} -gt 0 ]]; then
+    echo "Please do as root:"
+    echo "  sudo apt-get install ${pkgs_install[@]}"
+    echo "Then execute this script again"
+    exit
+  fi
 fi
 
 vcsh clone https://github.com/kam1kaze/dotfiles-main.git
