@@ -60,7 +60,13 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 " Disable auto-indentation for .erb files
-autocmd FileType eruby setl indentexpr=
+autocmd FileType eruby setl indentexpr =
+" Disable warnings for .erb files
+autocmd FileType eruby let g:syntastic_eruby_ruby_quiet_messages =
+  \ { 'regex': '^possibly useless use of a variable in void context$' }
+
+" Puppet
+let g:syntastic_puppet_puppetlint_args='--no-class_inherits_from_params_class-check --no-80chars-check'
 
 """
 highlight ExtraWhitespace ctermbg=darkgreen guibg=lightgreen
@@ -81,6 +87,7 @@ autocmd BufRead,BufNewFile */recipes/*.rb set filetype=ruby.eruby.chef
 
 """ General settings
 set wildmenu
+set number
 
 " Colors
 set t_Co=256
@@ -103,7 +110,7 @@ let g:netrw_liststyle=3
 
 " Show tab numbers
 if exists("+showtabline")
-     function MyTabLine()
+     function! MyTabLine()
          let s = ''
          let t = tabpagenr()
          let i = 1
