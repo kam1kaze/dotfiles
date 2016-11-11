@@ -1,10 +1,15 @@
 #!/bin/bash
 
-source /etc/bash_completion
-source $HOME/.profile
+if [[ -f /etc/bash_completion ]]; then
+  source /etc/bash_completion
+elif [[ -f /usr/local/etc/bash_completion ]]; then
+  source /usr/local/etc/bash_completion
+fi
+
+[[ -f $HOME/.bash_own ]] && source $HOME/.bash_own
 
 host=$1
-sudo_password=
+sudo_password=""
 
 function _sudo_ssh() {
 
@@ -21,24 +26,20 @@ trap {
 } WINCH
 
 proc do_exit {msg} {
-    puts stderr $msg
+    send_error "\n\n\[ERROR\] $msg"
     exit 1
 }
 
 spawn ssh -tt '$host' sudo -i
-expect  {
-  "password for " {
-    send -- "'$pass'\r"
-    interact
-  } "password:" {
-    do_exit "invalid SSH password or account"
-  } "try again" {
-    do_exit "invalid sudo password"
-  } timeout {
-    do_exit "timed out waiting for prompt"
-  } eof {
-    do_exit "connection to host failed: $expect_out(buffer)"
-  }
+expect {
+  "Sorry, try again." { do_exit "Invalid SUDO password" }
+  "Permission denied, please try again." { do_exit "Invalid SSH password or account" }
+  "password:" { send -- "'$pass'\r"; send_user "111"; exp_continue }
+  "password for " { send -- "'$pass'\r"; exp_continue }
+  "timeout" { do_exit "Timed out waiting for prompt" }
+  "#" { interact; exp_continue }
+  "$" { interact; exp_continue }
+  eof { do_exit "Connection to host failed: $expect_out(buffer)" }
 }
 ')
 
@@ -49,7 +50,7 @@ function _ssh() {
   while [[ "$connect" == true ]]; do
 
     if [[ -n $sudo_password ]]; then
-      _sudo_ssh $host $sudo_password
+      _sudo_ssh $1 $sudo_password
     else
       ssh $1
     fi

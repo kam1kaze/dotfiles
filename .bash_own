@@ -1,18 +1,12 @@
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# Aliases
-alias tmux="TERM=screen-256color tmux -2"
-
 # revert back PS1
 settitle() {
     printf "\033k$1\033\\"
 }
 ssh() {
     command ssh -o 'PermitLocalCommand yes' -o 'LocalCommand host="%n"; shopt -s extglob; host=${host#@(server|host).}; echo -ne "\033k${host//.*}\033\\"' "$@"
+    status=$?
     settitle "bash"
+    return $status
 }
 
 # Fix SSH auth socket location so agent forwarding works with tmux
@@ -26,3 +20,27 @@ fi
 if command -v keychain &>/dev/null && [[ -r ~/.ssh/identity ]]; then
   eval `keychain --quiet --eval identity`
 fi
+
+
+# Preserve bash history
+# http://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
+export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+export HISTSIZE=100000                   # big big history
+export HISTFILESIZE=100000               # big big history
+shopt -s histappend                      # append to history, don't overwrite it
+
+_bash_history_sync() {
+# http://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
+  history -a # history -w is not neccesary anymore due to zfh
+  #history -n
+  history -c
+  history -r
+}
+
+# Save and reload the history after each command finishes
+test "x$PROMPT_COMMAND" != "x${PROMPT_COMMAND%_bash_history_sync*}" ||
+	PROMPT_COMMAND="${PROMPT_COMMAND}"$'_bash_history_sync\n'
+
+
+# Display date and time for each command
+#export HISTTIMEFORMAT="%d/%m/%y %T "
