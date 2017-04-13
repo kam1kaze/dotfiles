@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Example
+# find ./ -type f -iname '*.jpg' | ./fix_date '+1388 days+9 hours'
+
+set -o pipefail
+set -o nounset
+set -o errexit
+
+# time difference
+diff=$1
+
+while read -r file; do
+  echo "Processing $file"
+
+  current=$(stat -c%w "$file")
+  echo "  current: $(date -d "${current}" +'%D %X')"
+
+  new=$(date -d "${current}${diff}" +'%D %X')
+  echo "  new:     $new"
+
+  # SetFile -d "$new" "$file"
+done < /dev/stdin

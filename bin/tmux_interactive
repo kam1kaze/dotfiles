@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+window=$(tmux list-windows | fzf -n 1,2 --reverse --cycle | cut -d: -f1)
+
+tmux select-window -t$window

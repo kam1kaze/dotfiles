@@ -18,6 +18,7 @@ Plug 'lifepillar/vim-solarized8'
 " Status line
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'jszakmeister/vim-togglecursor'
 
 " VCS
 Plug 'airblade/vim-gitgutter'
@@ -36,6 +37,7 @@ Plug 'plasticboy/vim-markdown'
 Plug 'vim-ruby/vim-ruby'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'hashivim/vim-terraform'
+Plug 'saltstack/salt-vim'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -51,7 +53,6 @@ set mouse=a
 set completeopt=longest,menuone,preview
 
 " bash scripts
-let b:is_bash = 1 " Force to use bash syntax for all sh scipts
 let g:neomake_sh_enabled_makers = ['shellcheck']
 let g:neomake_sh_shellcheck_args = ["-x"] +  neomake#makers#ft#sh#shellcheck()['args']
 
@@ -140,3 +141,15 @@ let g:airline_symbols.whitespace = 'Ξ'
 
 """ terraform
 autocmd BufNewFile,BufRead *.tfstate set filetype=json
+
+""" openstack
+autocmd BufNewFile,BufRead *.hot set filetype=yaml
+
+" Clear highlighting on escape in normal mode
+nnoremap <silent><esc> :noh<return><esc>
+
+" Shows the effects of a command incrementally, as you type
+" https://github.com/neovim/neovim/pull/5561/files
+if has('nvim')
+  set inccommand=nosplit
+endif

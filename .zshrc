@@ -31,12 +31,21 @@ zplug "plugins/rvm", from:oh-my-zsh
 zplug "plugins/gem", from:oh-my-zsh
 zplug "plugins/vagrant", from:oh-my-zsh
 zplug "plugins/aws", from:oh-my-zsh
-zplug "plugins/docker", from:oh-my-zsh
+#zplug "plugins/docker", from:oh-my-zsh
 zplug "lib/history", from:oh-my-zsh
+
+zplug "docker/compose", as:command, use:"contrib/completion/zsh/_docker-compose"
+zplug "docker/docker", as:command, use:"contrib/completion/zsh/_docker"
+
 HIST_STAMPS="mm/dd/yyyy"
-zplug "zsh-users/zsh-autosuggestions", nice:10
-zplug "zsh-users/zsh-syntax-highlighting", nice:19 # Should be loaded last.
+zplug "zsh-users/zsh-autosuggestions", defer:0
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+
+zplug "mafredri/zsh-async", on:sindresorhus/pure
+zplug "sindresorhus/pure", defer:1
+BASE16_SCHEME="ocean"
+
 zplug "seebi/dircolors-solarized"
 
 # Set theme
@@ -57,7 +66,7 @@ fi
 eval $(dircolors $ZPLUG_HOME/repos/seebi/dircolors-solarized/dircolors.256dark)
 
 # Then, source plugins and add commands to $PATH
-zplug load --verbose
+zplug load
 
 ### Autosuggestions
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
@@ -68,14 +77,22 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 HIST_STAMPS="mm/dd/yyyy"
 
-### Aliases
+### Aliases and functions
 alias sudo='sudo '
 alias ls='ls --color'
 alias ll='ls -la --color'
 alias curl-8080='curl -O -J -L --proxy socks5h://localhost:8080'
 alias gam='python /Users/oleksii_kravchenko/Work/ippt/abb_gam/GAM-3.51/gam.py'
 alias vim="nvim"
+alias view="nvim"
 alias vimdiff="nvim -d"
+alias grep="grep --color=auto"
+
+function ssh() {
+  # prevent infinite loop
+  $(which -p ssh) $@
+  [[ -n $TMUX ]] && tmux set-window-option -t"${TMUX_PANE}" automatic-rename 'on'
+}
 
 ### Vars
 export EDITOR='nvim'
@@ -108,3 +125,14 @@ fi
 
 ### RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+# http://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell
+if [[ -n "${TMUX}" ]]; then
+  unset zle_bracketed_paste
+fi
+
+# increase processes limits
+#ulimit -u 1024
+
+# added by travis gem
+[ -f /Users/okravchenko/.travis/travis.sh ] && source /Users/okravchenko/.travis/travis.sh

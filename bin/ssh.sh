@@ -1,15 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [[ -f /etc/bash_completion ]]; then
-  source /etc/bash_completion
-elif [[ -f /usr/local/etc/bash_completion ]]; then
-  source /usr/local/etc/bash_completion
+host="$1"
+uname=$(uname)
+
+# check if we need to use sudo
+if [[ "${host:0:1}" == '@' ]]; then
+  sudo_password="${SUDO_PASSWORD:-none}"
+  host=${host:1} # cut first symbol
 fi
-
-[[ -f $HOME/.bash_own ]] && source $HOME/.bash_own
-
-host=$1
-sudo_password=""
 
 function _sudo_ssh() {
 
@@ -37,8 +35,8 @@ expect {
   "password:" { send -- "'$pass'\r"; send_user "111"; exp_continue }
   "password for " { send -- "'$pass'\r"; exp_continue }
   "timeout" { do_exit "Timed out waiting for prompt" }
-  "#" { interact; exp_continue }
-  "$" { interact; exp_continue }
+  "#" { interact }
+  "$" { interact }
   eof { do_exit "Connection to host failed: $expect_out(buffer)" }
 }
 ')
@@ -50,44 +48,34 @@ function _ssh() {
   while [[ "$connect" == true ]]; do
 
     if [[ -n $sudo_password ]]; then
-      _sudo_ssh $1 $sudo_password
+      _sudo_ssh "$1" "$sudo_password"
     else
-      ssh $1
+      ssh "$1"
     fi
 
     if [[ "$?" -ne 0 ]]; then
-      local dumm
+      [[ "$uname" == "Darwin" ]] &&
+        osascript -e "display notification \"Connection to $host has been lost\" with title \"SSH\""
       echo
-      read -s -r -p "Press any key to reconnect..." -n 1 dummy
+      read -s -r -p "Press any key to reconnect..." -n 1 _
     else
       connect=false
     fi
   done
 }
 
-_known_hosts_real -a -F '' $host
+function on_exit() {
+  [[ -n $TMUX ]] && tmux set-window-option -t"${TMUX_PANE}" automatic-rename 'on'
+  exit
+}
 
-# we need only uniq hosts
-COMPREPLY=( $(echo "${COMPREPLY[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ') )
+host=$(
+  command cat <(cat ~/.ssh/config /etc/ssh/ssh_config 2> /dev/null | command grep -i '^host' | command grep -v '*') \
+  <(command grep -oE '^[^ ]+' ~/.ssh/known_hosts | tr ',' '\n' | awk '{ print $1 " " $1 }' | sed 's/\[\(\S\+\)\]:[0-9]*/\1/g') \
+  <(command grep -v '^\s*\(#\|$\)' /etc/hosts | command grep -Fv '0.0.0.0') |
+  awk '{if (length($2) > 0) {print $2}}' | sort -u | fzf -0 -1 -q "$host" || command echo "$host"
+)
 
-total=${#COMPREPLY[*]}
+trap on_exit INT EXIT
 
-case $total in
-  0)
-    _ssh $host
-    ;;
-  1)
-    _ssh ${COMPREPLY[0]}
-    ;;
-  *)
-    for (( i=0; i<=$(( $total -1 )); i++ )); do
-      echo "$(( i+1 )). ${COMPREPLY[$i]}"
-    done
-
-    num=1000
-    while [[ $(( $total/$num )) == 0 ]]; do
-      read -r num
-    done
-    _ssh ${COMPREPLY[$((num-1))]}
-    ;;
-esac
+_ssh "$host"

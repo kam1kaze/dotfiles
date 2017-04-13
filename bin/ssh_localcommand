@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+uname=$(uname)
+
+host=$1
+shopt -s extglob
+host_tab=${host#@(server|host).}
+#echo -ne "\033k${host//.*}\033\\"
+tab_name=${TMUX_TAB_SSH:-${host//.*}}
+[[ -n "$TMUX" ]] && eval tmux rename-window -t"${TMUX_PANE}" "${tab_name}"
+
+[[ "$uname" == "Darwin" ]] &&
+  osascript -e "display notification \"Connected to $host\" with title \"SSH\""
