@@ -38,6 +38,7 @@ zplug "docker/compose", as:command, use:"contrib/completion/zsh/_docker-compose"
 zplug "docker/docker", as:command, use:"contrib/completion/zsh/_docker"
 
 HIST_STAMPS="mm/dd/yyyy"
+# zplug "zsh-users/zsh-autosuggestions", at:develop, defer:0
 zplug "zsh-users/zsh-autosuggestions", defer:0
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
@@ -70,6 +71,7 @@ zplug load
 
 ### Autosuggestions
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
+ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 ### Oh-my-zsh
 # Uncomment the following line if you want to change the command execution time
@@ -79,8 +81,8 @@ HIST_STAMPS="mm/dd/yyyy"
 
 ### Aliases and functions
 alias sudo='sudo '
-alias ls='ls --color'
-alias ll='ls -la --color'
+alias ls='ls --color=auto'
+alias ll='ls -la --color=auto'
 alias curl-8080='curl -O -J -L --proxy socks5h://localhost:8080'
 alias gam='python /Users/oleksii_kravchenko/Work/ippt/abb_gam/GAM-3.51/gam.py'
 alias vim="nvim"

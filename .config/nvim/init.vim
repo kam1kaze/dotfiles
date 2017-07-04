@@ -18,7 +18,9 @@ Plug 'lifepillar/vim-solarized8'
 " Status line
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'jszakmeister/vim-togglecursor'
+" Such feature is enabled in 0.2.0 version be default
+" https://github.com/neovim/neovim/wiki/Following-HEAD#20170402
+"Plug 'jszakmeister/vim-togglecursor'
 
 " VCS
 Plug 'airblade/vim-gitgutter'
@@ -91,6 +93,10 @@ set autoindent
 
 " Allow backspacing everything in insert mode
 set backspace=2
+
+" shows partial off-screen results in a preview window for |:substitute|-like commands
+" https://www.youtube.com/watch?v=dY9dME3l-iQ
+set inccommand=split
 
 " Shortcuts to vimdiff
 " http://stackoverflow.com/questions/7309707/why-does-git-mergetool-opens-4-windows-in-vimdiff-id-expect-3
