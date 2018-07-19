@@ -12,6 +12,9 @@ export PATH="$HOME/bin:/usr/local/sbin:/usr/local/bin:$PATH"
 export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/gnu-sed/libexec/gnuman:$MANPATH"
 
+# envsubst
+export PATH="/usr/local/opt/gettext/bin:$PATH"
+
 # https://golang.org/doc/code.html#GOPATH
 export GOPATH="$HOME/.go"
 export PATH="$HOME/.go/bin:$PATH"
@@ -35,7 +38,7 @@ zplug "plugins/aws", from:oh-my-zsh
 zplug "lib/history", from:oh-my-zsh
 
 zplug "docker/compose", as:command, use:"contrib/completion/zsh/_docker-compose"
-zplug "docker/docker", as:command, use:"contrib/completion/zsh/_docker"
+zplug "docker/cli", as:command, use:"contrib/completion/zsh/_docker"
 
 HIST_STAMPS="mm/dd/yyyy"
 # zplug "zsh-users/zsh-autosuggestions", at:develop, defer:0
@@ -71,7 +74,8 @@ zplug load
 
 ### Autosuggestions
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
-ZSH_AUTOSUGGEST_USE_ASYNC=1
+# Enable autosuggestions when https://github.com/zsh-users/zsh-autosuggestions/issues/241 is fixed
+#ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 ### Oh-my-zsh
 # Uncomment the following line if you want to change the command execution time
@@ -90,9 +94,10 @@ alias view="nvim"
 alias vimdiff="nvim -d"
 alias grep="grep --color=auto"
 
-function ssh() {
+ssh() {
   # prevent infinite loop
-  $(which -p ssh) $@
+  #$(which -p ssh) $@
+  command ssh $@
   [[ -n $TMUX ]] && tmux set-window-option -t"${TMUX_PANE}" automatic-rename 'on'
 }
 
@@ -138,3 +143,23 @@ fi
 
 # added by travis gem
 [ -f /Users/okravchenko/.travis/travis.sh ] && source /Users/okravchenko/.travis/travis.sh
+
+# terraforming
+# terraforming () {
+#   set -x
+#   docker run $(env | awk '/^AWS_/{vars=vars " -e " $0};END{print vars}') \
+#     -v "${HOME}:${HOME}" \
+#     -w="$PWD" \
+#     --rm \
+#     --name terraforming \
+#     quay.io/dtan4/terraforming:latest \
+#     terraforming $@
+# }
+
+alias gam="/Users/kam1kaze/bin/gam/gam"
+
+### terraform
+terraform () {
+  [[ -f .terraformrc ]] && source .terraformrc
+  command terraform $@
+}

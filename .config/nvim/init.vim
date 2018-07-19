@@ -10,7 +10,17 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 
+" extends " and @ in normal mode and <CTRL-R> in insert mode so you can see the contents of the registers
+Plug 'junegunn/vim-peekaboo'
+
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'editorconfig/editorconfig-vim'
+
+" File manager
+Plug 'justinmk/vim-dirvish'
+
+" hybrid line numbers
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " Colors
 Plug 'lifepillar/vim-solarized8'
@@ -27,36 +37,89 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
 " Snippets
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'SirVer/ultisnips' " Temp
+"Plug 'honza/vim-snippets' " Temp
+function! DoRemote(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  !pip3 install --user --upgrade neovim
+  UpdateRemotePlugins
+endfunction
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote')}
+Plug 'wellle/tmux-complete.vim' " completion of words in adjacent tmux panes
+""" not maintained anymore :(
+"Plug 'roxma/nvim-completion-manager',
+"  \ { 'do': 'pip3 install --user --upgrade neovim psutil setproctitle' }
 
 " Run code linters and compilers
-Plug 'neomake/neomake'
+"Plug 'neomake/neomake'
+Plug 'w0rp/ale'
+
+" vim plugin to interact with tmux
+Plug 'benmills/vimux'
+
+" curl queries
+Plug 'nicwest/vim-http'
 
 " Languages
-Plug 'plasticboy/vim-markdown'
-Plug 'vim-ruby/vim-ruby'
-Plug 'ekalinin/Dockerfile.vim'
-Plug 'hashivim/vim-terraform'
+
+" the following plugins already in sheerun/vim-polyglot
+" Plug 'plasticboy/vim-markdown'
+" Plug 'vim-ruby/vim-ruby'
+Plug 'hashivim/vim-terraform' " wanna to use plugin for :TerraformFmt
+Plug 'juliosueiras/vim-terraform-completion'
+" Plug 'martinda/Jenkinsfile-vim-syntax'
+" Plug 'chr4/nginx.vim'
+Plug 'sheerun/vim-polyglot'
+"Plug 'ekalinin/Dockerfile.vim' " conflict with vim-polyglot
 Plug 'saltstack/salt-vim'
+Plug 'thecodesmith/groovyindent-unix'
 
 " Add plugins to &runtimepath
 call plug#end()
 
 """ General settings
 set wildmenu
-set number
+set number relativenumber
 set hidden
 set colorcolumn=150 " Line length highlighting
 set diffopt=filler,vertical
 set autoread
 set mouse=a
-set completeopt=longest,menuone,preview
+
+" (Optional)Hide Info(Preview) window after completions
+" TODO: fix conflict with command-line window with Ctrl-f
+" https://github.com/maralla/completor.vim/commit/6350a367baec6904a5f6e2005a9f5da2aaae311b
+"autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+"autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+" create directories on save if neccessary
+au BufWritePre,FileWritePre * silent! call mkdir(expand('<afile>:p:h'), 'p')
+
+" Set python3 host (i.e executable) to speedup startup time
+let g:python3_host_prog = '/usr/local/bin/python3'
+
+""" Plug dirvish
+let g:dirvish_relative_paths = 0
+
+""" Plug 'w0rp/ale'
+let g:ale_sign_error = 'EE'
+let g:ale_sign_warning = 'WW'
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " bash scripts
-let g:neomake_sh_enabled_makers = ['shellcheck']
-let g:neomake_sh_shellcheck_args = ["-x"] +  neomake#makers#ft#sh#shellcheck()['args']
+"let g:neomake_sh_enabled_makers = ['shellcheck']
+"let g:neomake_sh_shellcheck_args = ["-x"] +  neomake#makers#ft#sh#shellcheck()['args']
+let g:ale_sh_shellcheck_options = '-x'
+
+let g:ale_ruby_rubocop_options = "-S" " Display style guide URLs in offense messages
+let g:ale_fixers = {'ruby': ['rubocop']}
+
+""" Plug 'nicwest/vim-http'
+let g:vim_http_split_vertically = 1
 
 " Colors
 syntax enable
@@ -86,10 +149,16 @@ if (has("termguicolors"))
   endif
 endif
 
-" Set tab size
-set expandtab
-set tabstop=2 shiftwidth=2 softtabstop=2
+""" Indenting source code
+" http://vim.wikia.com/wiki/Indenting_source_code
+set expandtab " pressing the <TAB> key will always insert 'softtabstop' amount of space characters
+set shiftwidth=2 " affects what happens when you press >>, << or ==
+set softtabstop=2
+" copy the indentation from the previous line, when starting a new line. It can be useful for structured text files, or when you want to control
+" most of the indentation manually, without Vim interfering.
 set autoindent
+" enable file type based indentation
+filetype plugin indent on
 
 " Allow backspacing everything in insert mode
 set backspace=2
@@ -118,13 +187,7 @@ map <leader>b :Buffers<CR>
 let g:airline#extensions#tabline#enabled = 1
 
 " neomake
-autocmd! BufWritePost,BufEnter * Neomake
-
-""" deoplete
-let g:deoplete#enable_at_startup = 1
-" tab-complete
-inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+"autocmd! BufWritePost,BufEnter * Neomake
 
 """ airline
 if !exists('g:airline_symbols')
@@ -146,10 +209,18 @@ let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
 
 """ terraform
-autocmd BufNewFile,BufRead *.tfstate set filetype=json
+autocmd! BufNewFile,BufRead *.tfstate set filetype=json
+
+" vault configuration
+autocmd! BufNewFile,BufRead */vault_config/*.hcl set filetype=terraform
 
 """ openstack
-autocmd BufNewFile,BufRead *.hot set filetype=yaml
+autocmd! BufNewFile,BufRead *.hot set filetype=yaml
+
+""" nginx
+autocmd! BufNewFile,BufRead */*nginx/*.conf set filetype=nginx
+autocmd! BufNewFile,BufRead */*nginx/*.inc set filetype=nginx
+autocmd FileType nginx set foldmethod=marker
 
 " Clear highlighting on escape in normal mode
 nnoremap <silent><esc> :noh<return><esc>

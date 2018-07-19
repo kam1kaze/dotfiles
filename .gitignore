@@ -1,2 +1,4 @@
 *.swp
 *.swo
+.terraformrc
+backend.tf
