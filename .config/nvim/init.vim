@@ -13,6 +13,9 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 " extends " and @ in normal mode and <CTRL-R> in insert mode so you can see the contents of the registers
 Plug 'junegunn/vim-peekaboo'
 
+" enable repeating supported plugin maps with "."
+Plug 'tpope/vim-repeat'
+
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'editorconfig/editorconfig-vim'
 
