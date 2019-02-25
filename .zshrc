@@ -2,6 +2,10 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
+# time POSIX output
+# https://superuser.com/questions/71857/change-the-output-format-of-zshs-time
+export TIMEFMT=$'\nreal\t%*E\nuser\t%*U\nsys\t%*S'
+
 # we need dircolors binary
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
@@ -21,6 +25,9 @@ export PATH="$HOME/.go/bin:$PATH"
 
 # Add RVM to PATH for scripting
 export PATH="$PATH:$HOME/.rvm/bin"
+
+# Add Visual Studio Code (code)
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
 export ZPLUG_HOME=~/.config/zplug
 #source $(brew --prefix zplug)/init.zsh
@@ -163,3 +170,16 @@ terraform () {
   [[ -f .terraformrc ]] && source .terraformrc
   command terraform $@
 }
+
+### gcloud
+[ -f '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc' ] \
+  && source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc' \
+  && source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+
+# Helm
+if [ $commands[helm] ]; then
+  source <(helm completion zsh)
+fi
+
+### Kubectl plugins
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

@@ -1,12 +1,14 @@
 # vim: noai:ts=2:sw=2 filetype=ruby
 # Example: https://github.com/joelparkerhenderson/brewfile/blob/master/Brewfile
-tap 'caskroom/cask'
+#tap 'caskroom/cask'
 tap 'homebrew/core'
-tap 'homebrew/boneyard'
 tap 'homebrew/bundle'
 tap 'homebrew/services'
-tap 'caskroom/drivers'
-tap 'caskroom/versions'
+#tap 'caskroom/drivers'
+#tap 'caskroom/versions'
+tap 'homebrew/cask-versions'
+tap 'homebrew/cask'
+tap 'homebrew/cask-drivers'
 
 # sshpass
 tap 'hudochenkov/sshpass'
@@ -27,6 +29,7 @@ brew 'fzf'
 brew 'gawk'
 brew 'gettext' # envsubst
 brew 'gnu-sed', args: ['with-default-names']
+brew 'grep', args: ['with-default-names']
 brew 'hping'
 brew 'httping'
 brew 'ipcalc'
@@ -44,7 +47,11 @@ brew 'reattach-to-user-namespace'
 brew 'mtr'
 brew 'netcat'
 brew 'unrar'
+brew 'p7zip'
 brew 'watch'
+brew 'htop'
+brew 'rlwrap' # Readline wrapper: adds readline support to tools that lack it
+brew 'parallel'
 
 brew 'asciinema' # Record terminal session
 brew 'tmate' # Share termial
@@ -71,38 +78,49 @@ brew 'wget'
 brew 'awscli'
 brew 'awslogs'
 brew 's3cmd'
-cask 'chefdk'
+tap 'chef/chef'
+cask 'chef/chef/chefdk'
+brew 'ansible'
 brew 'kubernetes-cli'
+cask 'google-cloud-sdk'
 brew 'rpm'
 brew 'vault'
 brew 'ssh-copy-id'
 brew 'sshuttle'
 brew 'openssh'
+brew 'mosh'
 brew 'socat'
 brew 'nmap'
 brew 'vegeta' # HTTP load testing tool
 
 # work with s3 bucket as file system
-cask 'osxfuse'
-brew 's3fs'
-brew 'goofys'
+# cask 'osxfuse'
+# brew 's3fs'
+# brew 'goofys'
 
 ### Dev
 brew 'git'
 brew 'vcsh'
 cask 'docker'
 brew 'shellcheck'
+brew 'yamllint'
 brew 'go'
 brew 'python3'
 brew 'node'
 brew 'libyaml' # required by rubocop
 brew 'openssl@1.1' # required by rubocop
 cask 'keybase' # public key crypto for everyone
+cask 'postman'
+cask 'visual-studio-code'
 
 # json
 brew 'jq'
 brew 'jid'
 brew 'jo'
+brew 'jsonlint'
+# Replaced with own script
+# tap 'wakeful/selection'
+# brew 'wakeful/selection/yaml2json'
 
 # vagrant
 cask 'vagrant'
@@ -122,14 +140,16 @@ brew 'ldns'
 ### Media
 #brew 'mpv', args: ['with-bundle']
 cask 'mpv'
+cask 'iina'
 brew 'youtube-dl'
 cask 'vlc'
 cask 'spotify'
-cask 'airflow'
+# cask 'airflow'
 
 ### Browsers
-cask 'caskroom/versions/firefox-esr'
+#cask 'caskroom/versions/firefox-esr'
 cask 'google-chrome'
+cask 'firefox'
 cask 'google-hangouts'
 cask 'flash-npapi'
 cask 'torbrowser'
@@ -140,9 +160,6 @@ cask 'java'
 # select default applications for document types and URL schemes on Mac OS X
 brew 'duti'
 
-# Clipboard manager
-cask '1clipboard'
-
 # Remap ECS key to Caps-Lock, is not necessary anymore due to
 # https://9to5mac.com/2016/10/25/remap-escape-key-action-macbook-pro-macos-sierra-10-12-1-modifier-keys/
 # cask 'karabiner-elements'
@@ -150,24 +167,28 @@ cask '1clipboard'
 brew 'maven'
 brew 'nginx'
 brew 'openconnect'
-cask 'google-drive'
-cask 'google-photos-backup'
+cask 'google-backup-and-sync'
 cask 'insomnia'
 cask 'ioquake3'
 cask 'iterm2'
 cask 'keepassxc'
 cask 'keka'
-cask 'mac2imgur'
+# cask 'mac2imgur'
 cask 'macpass'
-cask 'openemu'
+# cask 'openemu'
 cask 'qbittorrent'
 cask 'skitch'
-cask 'skype'
 cask 'steam'
 cask 'teamviewer'
 cask 'tunnelblick'
 cask 'viber'
 cask 'wireshark'
+cask 'microsoft-remote-desktop-beta'
+
+# IM
+cask 'skype'
+cask 'slack'
+cask 'telegram-desktop'
 
 # Security
 brew 'aircrack-ng'

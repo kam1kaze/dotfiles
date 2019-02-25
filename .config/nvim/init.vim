@@ -36,7 +36,7 @@ Plug 'vim-airline/vim-airline-themes'
 "Plug 'jszakmeister/vim-togglecursor'
 
 " VCS
-Plug 'airblade/vim-gitgutter'
+Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 
 " Snippets
@@ -57,7 +57,7 @@ Plug 'wellle/tmux-complete.vim' " completion of words in adjacent tmux panes
 "  \ { 'do': 'pip3 install --user --upgrade neovim psutil setproctitle' }
 
 " Run code linters and compilers
-"Plug 'neomake/neomake'
+"Plug 'neomake/neomake' # replaced with ale
 Plug 'w0rp/ale'
 
 " vim plugin to interact with tmux
@@ -126,7 +126,8 @@ let g:vim_http_split_vertically = 1
 
 " Colors
 syntax enable
-colorscheme solarized8_dark_high
+set background=dark
+colorscheme solarized8
 
 " Copy buffer to system clipboard
 noremap <Leader>y "*y
@@ -233,3 +234,6 @@ nnoremap <silent><esc> :noh<return><esc>
 if has('nvim')
   set inccommand=nosplit
 endif
+
+""" Use deoplete.
+let g:deoplete#enable_at_startup = 1
