@@ -93,6 +93,10 @@ brew 'socat'
 brew 'nmap'
 brew 'vegeta' # HTTP load testing tool
 
+# ncurses like tool to manage k8s pods
+tap 'derailed/k9s'
+brew 'k9s'
+
 # work with s3 bucket as file system
 # cask 'osxfuse'
 # brew 's3fs'
@@ -145,6 +149,9 @@ brew 'youtube-dl'
 cask 'vlc'
 cask 'spotify'
 # cask 'airflow'
+cask 'plex-media-server'
+# does not work well with python3, so pip2 install tvnamer
+#brew 'tvnamer'
 
 ### Browsers
 #cask 'caskroom/versions/firefox-esr'

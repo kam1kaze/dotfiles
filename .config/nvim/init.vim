@@ -135,6 +135,10 @@ noremap <Leader>p "*p
 noremap <Leader>Y "+y
 noremap <Leader>P "+p
 
+" Yank full path of current buffer
+" https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
+let @" = expand("%")
+
 " From https://github.com/rakr/vim-one
 " Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 " If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support

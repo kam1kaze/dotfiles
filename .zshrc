@@ -53,17 +53,24 @@ zplug "zsh-users/zsh-autosuggestions", defer:0
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 
-zplug "mafredri/zsh-async", on:sindresorhus/pure
-zplug "sindresorhus/pure", defer:1
-BASE16_SCHEME="ocean"
+# Theme
+
+zplug "mafredri/zsh-async", from:github #on:eduarbo/simpl
+#zplug "sindresorhus/pure", defer:1
+#zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
+zplug "eduarbo/simpl", use:simpl.zsh, from:github, as:theme
+#BASE16_SCHEME="ocean"
+
+#autoload -U promptinit; promptinit
+#prompt simpl
 
 zplug "seebi/dircolors-solarized"
 
-# Set theme
-setopt PROMPT_SUBST
-zplug "themes/agnoster", from:oh-my-zsh
-# http://stackoverflow.com/questions/28491458/zsh-agnoster-theme-showing-machine-name
-DEFAULT_USER=$(id -un)
+# # Set theme
+# setopt PROMPT_SUBST
+# zplug "themes/agnoster", from:oh-my-zsh
+# # http://stackoverflow.com/questions/28491458/zsh-agnoster-theme-showing-machine-name
+# DEFAULT_USER=$(id -un)
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then

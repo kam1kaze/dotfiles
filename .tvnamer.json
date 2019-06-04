@@ -1,0 +1,5 @@
+{
+  "filename_with_episode": "%(seriesname)s - s%(seasonno)02de%(episode)02s - %(episodename)s%(ext)s",
+  "move_files_destination": "/Users/kam1kaze/Movies/%(seriesname)s/Season %(seasonnumber)02d/",
+  "valid_extensions": ["mkv", "avi", "mp4", "mpg", "wmv"]
+}
