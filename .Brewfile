@@ -52,6 +52,10 @@ brew 'watch'
 brew 'htop'
 brew 'rlwrap' # Readline wrapper: adds readline support to tools that lack it
 brew 'parallel'
+brew 'mackup' # Keep your application settings in sync (OS X/Linux)
+brew 'mas' # Mac App Store manager
+brew 'bat' # `cat` on steroids
+brew 'fd' # `find` on steroids
 
 brew 'asciinema' # Record terminal session
 brew 'tmate' # Share termial
@@ -128,6 +132,7 @@ brew 'jsonlint'
 
 # vagrant
 cask 'vagrant'
+brew 'vagrant-completion'
 cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 
@@ -199,3 +204,11 @@ cask 'telegram-desktop'
 
 # Security
 brew 'aircrack-ng'
+brew 'hashcat'
+
+mas 'Xcode', id: 497799835
+mas 'The Unarchiver', id: 425424353
+mas 'PasteBox', id: 928940999
+mas 'WiFi Explorer Lite', id: 1408727408
+mas 'Amphetamine', id: 937984704
+mas 'Monosnap Screenshot Editor', id: 540348655
